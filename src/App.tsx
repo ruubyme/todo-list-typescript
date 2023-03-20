@@ -12,6 +12,12 @@ function App() {
   const [todos, setTodos] = useState<TodoType[]>([]);
   const [value, setValue] = useState("");
 
+  /**삭제 기능 */
+  const handleDelete = (id: number) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+  };
+
   /**todo 추가 기능 */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,7 +39,7 @@ function App() {
   return (
     <div>
       <h1>Todo List</h1>
-      <TodoList todos={todos} />
+      <TodoList todos={todos} onDelete={handleDelete} />
       <form onSubmit={handleSubmit}>
         <input
           type="text"
