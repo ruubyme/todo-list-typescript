@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 type Todo = {
   id: number;
@@ -24,7 +25,7 @@ const Todo: React.FC<TodoProps> = ({ todo, onDelete, onToggle }) => {
   return (
     <div>
       <input type="checkbox" checked={todo.completed} onChange={handleToggle} />
-      <span>{todo.value}</span>
+      <Link to={`/todos/${todo.id}`}>{todo.value}</Link>
       <button onClick={handleDelete}>X</button>
     </div>
   );

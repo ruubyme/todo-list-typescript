@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+//import styled from "styled-components";
 import Todo from "./Todo";
 
 type TodoListProps = {
@@ -8,13 +8,13 @@ type TodoListProps = {
   onToggle: (id: number) => void;
 };
 
-const TodoListContainer = styled.div`
-  margin: 1rem 0;
-`;
+// const TodoListContainer = styled.div`
+//   margin: 1rem 0;
+// `;
 
-const TodoListTitle = styled.h2`
-  font-size: 1.5rem;
-`;
+// const TodoListTitle = styled.h2`
+//   font-size: 1.5rem;
+// `;
 
 const TodoList: React.FC<TodoListProps> = ({ todos, onDelete, onToggle }) => {
   const completedTodos = todos.filter((todo) => todo.completed);
@@ -28,9 +28,11 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete, onToggle }) => {
     onToggle(id);
   };
 
+  const handleEdit = (id: number) => {};
+
   return (
-    <TodoListContainer>
-      <TodoListTitle>진행 중인 일</TodoListTitle>
+    <>
+      <h2>진행 중인 일</h2>
       {incompletedTodos.map((todo) => (
         <Todo
           key={todo.id}
@@ -39,7 +41,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete, onToggle }) => {
           onToggle={handleToggle}
         />
       ))}
-      <TodoListTitle>완료한 일</TodoListTitle>
+      <h2>완료한 일</h2>
       {completedTodos.map((todo) => (
         <Todo
           key={todo.id}
@@ -48,7 +50,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete, onToggle }) => {
           onToggle={handleToggle}
         />
       ))}
-    </TodoListContainer>
+    </>
   );
 };
 
