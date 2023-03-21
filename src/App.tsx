@@ -30,10 +30,27 @@ function App() {
     setValue("");
   };
 
+  /**삭제 기능 */
+  const handleDelete = (id: number) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+  };
+
+  /**todo toggle기능 */
+  const handleToggle = (id: number) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, completed: !todo.completed };
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
+  };
+
   return (
     <div>
       <h1>Todo List</h1>
-      <TodoList todos={todos} />
+      <TodoList todos={todos} onDelete={handleDelete} onToggle={handleToggle} />
       <form onSubmit={handleSubmit}>
         <input
           type="text"
