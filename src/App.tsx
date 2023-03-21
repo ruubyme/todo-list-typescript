@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import Todo from "./components/Todo";
+import TodoList from "./components/TodoList";
+
+type TodoType = {
+  id: number;
+  value: string;
+  completed: boolean;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState<TodoType[]>([]);
+  const [value, setValue] = useState("");
+
+  /**todo 추가 기능 */
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (value === "") {
+      return;
+    }
+
+    const newTodo: TodoType = {
+      id: todos.length + 1,
+      value,
+      completed: false,
+    };
+
+    setTodos([...todos, newTodo]);
+    setValue("");
+  };
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div>
+      <h1>Todo List</h1>
+      <TodoList todos={todos} />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+        <button type="submit">추가</button>
+      </form>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
