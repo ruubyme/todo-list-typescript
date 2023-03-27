@@ -1,64 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-type Todo = {
+type TodoDetail = {
+  title: string;
+  contents: string;
+};
+
+type TodoDetailProps = {
   id: number;
-  value: string;
-  completed: boolean;
+  title: string;
 };
 
-type TodoEditProps = {
-  todos: Todo[];
-  onSave: (todos: Todo[]) => void;
-};
+const TodoDetail: React.FC<TodoDetailProps> = ({ id, title }) => {
+  const [contents, setContents] = useState<string>("");
 
-const TodoEdit: React.FC<TodoEditProps> = ({ todos, onSave }) => {
-  const { id } = useParams<{ id: string }>();
-  const todoId = Number(id);
-  const navigate = useNavigate();
+  const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  const [todo, setTodo] = useState<Todo | undefined>(undefined);
-  const [content, setContent] = useState<string>("");
-
-  useEffect(() => {
-    const selectedTodo = todos.find((t) => t.id === todoId);
-    if (selectedTodo) {
-      setTodo(selectedTodo);
-      setContent(selectedTodo.value);
-    } else {
-      // Todo not found, go back to TodoList
-      navigate("/");
+    if (title == "") {
+      return;
     }
-  }, [todos, todoId, history]);
 
-  const handleSave = () => {
-    if (!todo) return;
-
-    const updatedTodo = { ...todo, value: content };
-    const updatedTodos = todos.map((t) => (t.id === todoId ? updatedTodo : t));
-    onSave(updatedTodos);
-    navigate("/");
+    const newTodoDetail: TodoDetail = {
+      title,
+      contents,
+    };
   };
-
   return (
-    <div>
-      <h2>Todo 수정하기</h2>
-      {todo && (
-        <>
-          <div>ID: {todo.id}</div>
-          <div>
-            <label htmlFor="content">내용</label>
-            <textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
-          </div>
-          <button onClick={handleSave}>저장</button>
-        </>
-      )}
-    </div>
+    <form onSubmit={handleUpdate}>
+      <label>
+        Title:
+        <input type="text" value={title} />
+      </label>
+      <label>
+        Contents:
+        <textarea
+          value={contents}
+          onChange={(e) => setContents(e.target.value)}
+        />
+      </label>
+      <button type="submit">Save</button>
+    </form>
   );
 };
 
-export default TodoEdit;
+export default TodoDetail;

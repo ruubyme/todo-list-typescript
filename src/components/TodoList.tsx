@@ -1,38 +1,61 @@
-import React, { useState } from "react";
-//import styled from "styled-components";
+import { useState } from "react";
 import Todo from "./Todo";
 
-type TodoListProps = {
-  todos: { id: number; value: string; completed: boolean }[];
-  onDelete: (id: number) => void;
-  onToggle: (id: number) => void;
+type TodoType = {
+  id: number;
+  title: string;
+  contents?: string;
+  completed: boolean;
 };
 
-// const TodoListContainer = styled.div`
-//   margin: 1rem 0;
-// `;
+const TodoList: React.FC = () => {
+  const [todos, setTodos] = useState<TodoType[]>([]);
+  const [title, setValue] = useState("");
 
-// const TodoListTitle = styled.h2`
-//   font-size: 1.5rem;
-// `;
+  /**todo 추가 기능 */
 
-const TodoList: React.FC<TodoListProps> = ({ todos, onDelete, onToggle }) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (title == "") {
+      return;
+    }
+
+    const newTodo: TodoType = {
+      id: todos.length + 1,
+      title,
+      completed: false,
+    };
+
+    setTodos([...todos, newTodo]);
+    setValue("");
+  };
+
+  /**todo 삭제 기능 */
+
+  const handleDelete = (id: number) => {
+    const uqdatedToods = todos.filter((todo) => todo.id! == id);
+    setTodos(uqdatedToods);
+  };
+
+  /**todo toggle 기능 */
+
+  const handleToggle = (id: number) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id == id) {
+        return { ...todo, completed: !todo.completed };
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
+  };
+
   const completedTodos = todos.filter((todo) => todo.completed);
   const incompletedTodos = todos.filter((todo) => !todo.completed);
 
-  const handleDelete = (id: number) => {
-    onDelete(id);
-  };
-
-  const handleToggle = (id: number) => {
-    onToggle(id);
-  };
-
-  const handleEdit = (id: number) => {};
-
   return (
-    <>
-      <h2>진행 중인 일</h2>
+    <div>
+      <h1>진행 중인 일</h1>
       {incompletedTodos.map((todo) => (
         <Todo
           key={todo.id}
@@ -41,7 +64,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete, onToggle }) => {
           onToggle={handleToggle}
         />
       ))}
-      <h2>완료한 일</h2>
+      <h1>완료한 일</h1>
       {completedTodos.map((todo) => (
         <Todo
           key={todo.id}
@@ -50,8 +73,17 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onDelete, onToggle }) => {
           onToggle={handleToggle}
         />
       ))}
-    </>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="할 일을 입력해주세요."
+          value={title}
+          onChange={(e) => setValue(e.target.value)}
+        ></input>
+        <button type="submit">+</button>
+      </form>
+    </div>
   );
 };
 
-export default TodoList;
+export { type TodoType, TodoList };
