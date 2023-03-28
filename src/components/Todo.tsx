@@ -5,9 +5,10 @@ type Todoprops = {
   todo: TodoType;
   onDelete: (id: number) => void;
   onToggle: (id: number) => void;
+  onEdit: (id: number, title: string, contents: string) => void;
 };
 
-const Todo: React.FC<Todoprops> = ({ todo, onDelete, onToggle }) => {
+const Todo: React.FC<Todoprops> = ({ todo, onDelete, onToggle, onEdit }) => {
   return (
     <div>
       <input
@@ -16,7 +17,8 @@ const Todo: React.FC<Todoprops> = ({ todo, onDelete, onToggle }) => {
         onChange={() => onToggle(todo.id)}
       />
       <Link
-        to={{ pathname: `/detail/${todo.id}`, search: `value=${todo.title}` }}
+        to={{ pathname: `/detail/${todo.id}`, search: `title=${todo.title}` }}
+        state={{ todo, onEdit }}
       >
         {todo.title}
       </Link>

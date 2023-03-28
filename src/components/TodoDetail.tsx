@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TodoType } from "./TodoList";
 
 type TodoDetail = {
   title: string;
@@ -6,41 +7,43 @@ type TodoDetail = {
 };
 
 type TodoDetailProps = {
-  id: number;
-  title: string;
+  // id: number;
+  // title: string;
+  todo: TodoType;
+  onEdit: (id: number, title: string, contents: string) => void;
 };
 
-const TodoDetail: React.FC<TodoDetailProps> = ({ id, title }) => {
-  const [contents, setContents] = useState<string>("");
+const TodoDetail: React.FC<TodoDetailProps> = ({ todo, onEdit }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState(todo.title);
+  const [contents, setContents] = useState(todo.contents);
 
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (title == "") {
-      return;
-    }
-
-    const newTodoDetail: TodoDetail = {
-      title,
-      contents,
-    };
+    onEdit(todo.id, todo.title, todo.contents);
   };
-  return (
-    <form onSubmit={handleUpdate}>
-      <label>
-        Title:
-        <input type="text" value={title} />
-      </label>
-      <label>
-        Contents:
+  if (isEditing) {
+    return (
+      <form onSubmit={handleUpdate}>
+        <input value={title} onChange={(e) => setTitle(e.target.value)} />
         <textarea
           value={contents}
           onChange={(e) => setContents(e.target.value)}
         />
-      </label>
-      <button type="submit">Save</button>
-    </form>
-  );
+        <button type="submit">Save</button>
+        <button onClick={() => setIsEditing(false)}>Cancel</button>
+      </form>
+    );
+  } else {
+    return (
+      <div>
+        <h2>{todo.title}</h2>
+        <p>{todo.contents}</p>
+        <button onClick={() => setIsEditing(true)}>Edit</button>
+      </div>
+    );
+  }
 };
 
 export default TodoDetail;

@@ -4,7 +4,7 @@ import Todo from "./Todo";
 type TodoType = {
   id: number;
   title: string;
-  contents?: string;
+  contents: string | "";
   completed: boolean;
 };
 
@@ -25,6 +25,7 @@ const TodoList: React.FC = () => {
       id: todos.length + 1,
       title,
       completed: false,
+      contents: "",
     };
 
     setTodos([...todos, newTodo]);
@@ -50,6 +51,18 @@ const TodoList: React.FC = () => {
     setTodos(updatedTodos);
   };
 
+  /**todo edit 기능 */
+
+  const handleEdit = (id: number, title: string, contents: string) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, title, contents };
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
+  };
+
   const completedTodos = todos.filter((todo) => todo.completed);
   const incompletedTodos = todos.filter((todo) => !todo.completed);
 
@@ -62,6 +75,7 @@ const TodoList: React.FC = () => {
           todo={todo}
           onDelete={handleDelete}
           onToggle={handleToggle}
+          onEdit={handleEdit}
         />
       ))}
       <h1>완료한 일</h1>
@@ -71,6 +85,7 @@ const TodoList: React.FC = () => {
           todo={todo}
           onDelete={handleDelete}
           onToggle={handleToggle}
+          onEdit={handleEdit}
         />
       ))}
       <form onSubmit={handleSubmit}>
