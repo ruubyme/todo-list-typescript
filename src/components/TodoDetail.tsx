@@ -1,49 +1,67 @@
-import { useState } from "react";
-import { TodoType } from "./TodoList";
-
-type TodoDetail = {
-  title: string;
-  contents: string;
-};
+import { useEffect, useState } from "react";
+import {
+  TodoType,
+  useTodosDispatch,
+  useTodosState,
+} from "../Contexts/TodosContext";
 
 type TodoDetailProps = {
-  // id: number;
-  // title: string;
   todo: TodoType;
-  onEdit: (id: number, title: string, contents: string) => void;
+  todos: TodoType[];
 };
 
-const TodoDetail: React.FC<TodoDetailProps> = ({ todo, onEdit }) => {
+const TodoDetail: React.FC<TodoDetailProps> = ({ todo, todos }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(todo.title);
+  const [value, setValue] = useState(todo.title);
   const [contents, setContents] = useState(todo.contents);
+  const [newTodo, setNewTodo] = useState<TodoType>(todo);
 
-  const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
+  const dispatch = useTodosDispatch();
+  const state = useTodosState();
+  // console.log(state);
+  // console.log(newTodo);
+
+  const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    dispatch({
+      type: "EDIT",
+      todos,
+      id: todo.id,
+      title: value,
+      contents: contents,
+    });
 
-    onEdit(todo.id, todo.title, todo.contents);
+    setIsEditing(false);
   };
-  if (isEditing) {
-    return (
-      <form onSubmit={handleUpdate}>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} />
-        <textarea
-          value={contents}
-          onChange={(e) => setContents(e.target.value)}
-        />
-        <button type="submit">Save</button>
-        <button onClick={() => setIsEditing(false)}>Cancel</button>
-      </form>
-    );
-  } else {
-    return (
-      <div>
-        <h2>{todo.title}</h2>
-        <p>{todo.contents}</p>
-        <button onClick={() => setIsEditing(true)}>Edit</button>
-      </div>
-    );
-  }
+
+  useEffect(() => {
+    const currentTodo = state.find((t) => t.id == todo.id);
+    if (currentTodo) {
+      setNewTodo((prevTodo) => ({ ...prevTodo, ...currentTodo }));
+    }
+  }, [todo, state]);
+
+  return (
+    <>
+      {isEditing ? (
+        <form onSubmit={handleSave}>
+          <input value={value} onChange={(e) => setValue(e.target.value)} />
+          <textarea
+            value={contents}
+            onChange={(e) => setContents(e.target.value)}
+          />
+          <button type="submit">Save</button>
+          <button onClick={() => setIsEditing(false)}>Cancel</button>
+        </form>
+      ) : (
+        <div>
+          <h2>{newTodo.title}</h2>
+          <p>{newTodo.contents}</p>
+          <button onClick={() => setIsEditing(true)}>Edit</button>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default TodoDetail;

@@ -1,33 +1,28 @@
 import { useLocation, useParams } from "react-router-dom";
 import TodoDetail from "../components/TodoDetail";
-import { TodoType } from "../components/TodoList";
+import { TodosContextProvider } from "../Contexts/TodosContext";
 
 const Detail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   if (!id) {
-    return;
+    return <div>id를 찾을 수 없습니다.</div>;
   }
   const idNumber = parseInt(id, 10);
 
   const { search } = useLocation(); //브라우저의 현재 위치 정보를 가져옴
-  const query = new URLSearchParams(search); //쿼리스트링 추출
-  const title = query.get("title"); //todo.value 값 추출
 
   const { state } = useLocation(); //state 값 가져오기
   if (!state) {
-    return;
+    return <div>데이터를 찾을 수 없습니다.</div>;
   }
 
-  if (!title) {
-    return;
-  }
+  const { todo, todos } = state;
 
-  const { todo, onEdit } = state;
-
-  console.log(todo);
-  console.log(state);
-
-  return <TodoDetail todo={todo} onEdit={onEdit} />;
+  return (
+    <TodosContextProvider>
+      <TodoDetail todo={todo} todos={todos} />
+    </TodosContextProvider>
+  );
 };
 
 export default Detail;

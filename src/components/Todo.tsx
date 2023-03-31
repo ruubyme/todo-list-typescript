@@ -1,28 +1,39 @@
-import { Link } from "react-router-dom";
-import { TodoType } from "./TodoList";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  TodoType,
+  useTodosDispatch,
+  useTodosState,
+} from "../Contexts/TodosContext";
 
 type Todoprops = {
   todo: TodoType;
-  onDelete: (id: number) => void;
-  onToggle: (id: number) => void;
-  onEdit: (id: number, title: string, contents: string) => void;
 };
 
-const Todo: React.FC<Todoprops> = ({ todo, onDelete, onToggle, onEdit }) => {
+const Todo: React.FC<Todoprops> = ({ todo }) => {
+  const dispatch = useTodosDispatch();
+  const todos = useTodosState();
+
+  const onToggle = () => {
+    dispatch({
+      type: "TOGGLE",
+      id: todo.id,
+    });
+  };
+
+  const onDelete = () => {
+    dispatch({
+      type: "REMOVE",
+      id: todo.id,
+    });
+  };
+
   return (
     <div>
-      <input
-        type="checkbox"
-        checked={todo.completed}
-        onChange={() => onToggle(todo.id)}
-      />
-      <Link
-        to={{ pathname: `/detail/${todo.id}`, search: `title=${todo.title}` }}
-        state={{ todo, onEdit }}
-      >
+      <input type="checkbox" checked={todo.completed} onChange={onToggle} />
+      <Link to={{ pathname: `/detail/${todo.id}` }} state={{ todo, todos }}>
         {todo.title}
       </Link>
-      <button onClick={() => onDelete(todo.id)}>X</button>
+      <button onClick={onDelete}>X</button>
     </div>
   );
 };
