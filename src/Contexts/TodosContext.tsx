@@ -3,14 +3,16 @@ import { createContext, Dispatch, useContext, useReducer } from "react";
 type TodoType = {
   id: number;
   title: string;
-  contents: string | "";
+  contents: string | "작성하지 않음";
   completed: boolean;
 };
 
 type TodosState = TodoType[];
 
+//todo의 상태를 보유
 const TodosStateContext = createContext<TodosState | undefined>(undefined);
 
+// todo 상태를 변경하기 위한 action
 type Action =
   | { type: "CREATE"; title: string }
   | { type: "TOGGLE"; id: number }
@@ -28,6 +30,7 @@ const TodosDispatchContext = createContext<TodosDispatch | undefined>(
   undefined
 );
 
+//todo상태와 액션 객체를 받아들여서 새로운 상태를 반환. 액션 타입에 따라 다름.
 const todosReducer = (state: TodosState, action: Action) => {
   switch (action.type) {
     case "CREATE":
