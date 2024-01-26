@@ -1,7 +1,7 @@
 import TodoList from "../components/TodoList";
 import { TodosContextProvider } from "../Contexts/TodosContext";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Home: React.FC = () => {
   const [test, setTest] = useState<string>("");
@@ -11,6 +11,10 @@ const Home: React.FC = () => {
     );
     setTest(response.data);
   };
+
+  useEffect(() => {
+    testfunction();
+  }, []);
 
   return (
     <>
