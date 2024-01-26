@@ -31,7 +31,7 @@ const Todo: React.FC<Todoprops> = ({ todo }) => {
   return (
     <label
       htmlFor="checkbox-in-form"
-      className="max-w-xl flex p-3 block w-full bg-gray-600 bg-opacity-20 rounded-md text-sm justify-between"
+      className="max-w-xl flex p-3 w-full bg-gray-600 bg-opacity-20 rounded-md text-sm justify-between"
     >
       <input
         type="checkbox"
