@@ -6,7 +6,9 @@ import { useEffect, useState } from "react";
 const Home: React.FC = () => {
   const [test, setTest] = useState<string>("");
   const testfunction = async () => {
-    const response = await axios.get("http://0.0.0.0:7009/print");
+    const response = await axios.get(
+      "https://flask-production-5ca5.up.railway.app/print"
+    );
     setTest(response.data);
   };
 
